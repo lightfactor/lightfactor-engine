@@ -1,0 +1,9 @@
+node_modules/
+data
+crypto
+*.log
+
+config.js
+scripts
+test
+README.ec2

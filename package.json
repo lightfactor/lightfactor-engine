@@ -1,0 +1,41 @@
+{
+  "name": "lightfactor-engine",
+  "version": "0.0.1",
+  "description": "Lightfactor Identity Engine",
+  "private": true,
+  "keywords": [
+    "UAF",
+    "authentication",
+    "FIDO"
+  ],
+  "author": "Dave Atherton <datherton@lightfactor.co>",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/lightfactor/lightfactor-engine.git"
+  },
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "scripts_library": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "apn": "^1.7.5",
+    "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.1",
+    "crypto": "0.0.3",
+    "debug": "^2.2.0",
+    "elliptic": "^6.2.3",
+    "express": "^4.13.4",
+    "lightfactor-uaf": ">=0.0.1",
+    "mongodb": "^2.1.7",
+    "morgan": "^1.7.0",
+    "node-forge": "^0.6.42",
+    "node-jose": "^0.8.0",
+    "node-tlv": "^1.0.4",
+    "pug": "^2.0.0-beta6",
+    "serve-favicon": "^2.3.0",
+    "u2f": "^0.1.2"
+  }
+}
