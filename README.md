@@ -4,7 +4,7 @@ Lightfactor Identity Engine is a lightweight server that implements the [FIDO U2
 
 Lightfactor Identity Engine was designed and built with an emphasis on scalability and simplicity with regard to installation, dependencies, architecture, etc. It is offered here, in Open Source form, to educate, drive further adoption of FIDO, and expand the FIDO ecosystem. No warranty is offered or implied.
 
-A running instance of this server is often available at https://qiwisrv.lightfactor.co. This instance is for demonstration purposes and is **not** intended for operational use.  UAF client implementers wishing to test against this instance may submit their metadata addition requests to meta@lightfactor.co.
+A running instance of this server is normally available at https://qiwisrv.lightfactor.co. This instance is for demonstration purposes and is **not** intended for operational use.  UAF client implementers wishing to test against this instance may submit their metadata addition requests to meta@lightfactor.co.
 
 Source code review is appreciated, and contributions are welcomed and encouraged.
 
@@ -21,8 +21,8 @@ Additional features are planned; stay tuned for announcements and information...
 * Lightfactor Identity Engine is implemented using [Node.js](https://nodejs.org/en/) and [Express](http://expressjs.com).
 * It uses [MongoDB](https://www.mongodb.com) for persistence; a connection URL for your instance is required.
 * It relies on the lightfactor-uaf library for UAF operations.
-* You will need Python >=2.5.0 & < 3.0.0 for node-gyp
-* You will need to provision a real SSL certificate (not a self-signed certificate!) for use with iOS UAF clients due to the Application Transport Security features included with iOS 9.0
+* You will need Python >=2.5.0 & < 3.0.0 for node-gyp.
+* You will need to provision a **real** SSL certificate (not a self-signed certificate!) for use with iOS UAF clients due to the Application Transport Security features included with iOS 9.0, unless your UAF client has provisions for certificate pinning.
 
 ## Installation
 
