@@ -21,10 +21,12 @@ Additional features are planned; stay tuned for announcements and information...
 * Lightfactor Identity Engine is implemented using [Node.js](https://nodejs.org/en/) and [Express](http://expressjs.com).
 * It uses [MongoDB](https://www.mongodb.com) for persistence; a connection URL for your instance is required.
 * It relies on the lightfactor-uaf library for UAF operations.
+* You will need Python >=2.5.0 & < 3.0.0 for node-gyp
+* You will need to provision a real SSL certificate (not a self-signed certificate!) for use with iOS UAF clients due to the Application Transport Security features included with iOS 9.0
 
 ## Installation
 
-1. Install node on your platform
+1. Install node and python on your platform
 2. **git clone** this repo into a local directory
 3. Copy the provided config-example.js to config.js and supply the SSL cert and key paths, and the MongoDB connection URL
 4. **npm install** to install modules (including lightfactor-uaf)
