@@ -22,7 +22,7 @@ Additional features are planned; stay tuned for announcements and information...
 * It uses [MongoDB](https://www.mongodb.com) for persistence; a connection URL for your instance is required.
 * It relies on the lightfactor-uaf library for UAF operations.
 * You will need Python >=2.5.0 & < 3.0.0 for node-gyp.
-* You will need to provision a **real** SSL certificate (not a self-signed certificate!) for use with iOS UAF clients due to the Application Transport Security features included with iOS 9.0, unless your UAF client has provisions for certificate pinning.
+* You will need to provision a **real** SSL certificate (not a self-signed certificate!) for use with iOS UAF clients and/or the FIDO Conformance testing app due to the Application Transport Security features included with iOS 9.0.
 
 ## Installation
 
@@ -32,7 +32,7 @@ Additional features are planned; stay tuned for announcements and information...
 4. **npm install** to install modules (including lightfactor-uaf)
 5. **node app** to run server
 
-This process assumes that you know how to install and use node. Note that, depending on your platform, there may be additional libraries required, particularly with regards to image generation.
+This process assumes that you know how to install and use node. Note that, depending on your platform, there may be additional libraries required, particularly with regard to transaction confirmation image generation.
 
 ## Usage
 
