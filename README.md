@@ -28,15 +28,16 @@ Additional features are planned; stay tuned for announcements and information...
 
 1. Install node and python on your platform
 2. **git clone** this repo into a local directory
-3. Copy the provided config-example.js to config.js and supply the SSL cert and key paths, and the MongoDB connection URL
-4. **npm install** to install modules (including lightfactor-uaf)
-5. **node app** to run server
+3. **npm install** to install modules (including lightfactor-uaf)
+4. Edit **config.js** to reflect your MongoDB endpoint and database (and SSL paths, if changed)
+5. **node seed** to seed configured database with minimal facet, policy, metadata, and challenge data (and indexes)
+6. **node app** to run server
 
-This process assumes that you know how to install and use node. Note that, depending on your platform, there may be additional libraries required, particularly with regard to transaction confirmation image generation.
+This process assumes that you know how to install and use node. Note that, depending on your platform, there may be additional libraries required, particularly with regard to transaction confirmation image generation. Also note that you may want or need to edit the seeded data to conform with your particular requirements; if you'd like to edit it before insertion, it is located in the new *db* subdirectory.
 
 ## Usage
 
-For specific details on the underlying FIDO payloads, please refer to the [specifications](https://fidoalliance.org/specifications/overview/). The API is exposed via HTTP (all via POST). The following are example bodies:
+For specific details on the underlying FIDO payloads, please refer to the [specifications](https://fidoalliance.org/specifications/overview/). The API is exposed via HTTP POST. The following are example bodies:
 
 ### Initiate (/Get)
 The same endpoint is used to initiate all transactions. The body posted should contain **one** of the following:
