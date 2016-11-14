@@ -68,7 +68,9 @@ function findOneTrustedFacetList(query, obj) {
       if (err) reject(err);
       if (!(facetList) || facetList.length !== 1) reject(new Error("TFL search did not yield exactly one match."));
       else {
-        obj.trustedFacets = facetList[0].trustedFacets[0];
+        obj.trustedFacets = {
+          trustedFacets: facetList[0].trustedFacets
+        };
         resolve (obj);
       }
     });
