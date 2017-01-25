@@ -1,6 +1,6 @@
 # Lightfactor Identity Engine
 
-Lightfactor Identity Engine is a lightweight server that implements the [FIDO U2F and UAF protocols](https://fidoalliance.org/specifications/overview/) for identity and authentication.  This implementation participated in the August 2016 FIDO Interop event and was [certified](https://fidoalliance.org/certification/fido-certified/) by FIDO in September 2016.  It has been load-tested against a free-tier AWS instance and can support at least 200 simultaneous UAF operations in that configuration.
+Lightfactor Identity Engine is a lightweight server that implements the [FIDO UAF protocol](https://fidoalliance.org/specifications/overview/) for identity and authentication.  This implementation participated in the August 2016 FIDO Interop event and was [certified](https://fidoalliance.org/certification/fido-certified/) by FIDO in September 2016.  It has been load-tested against a free-tier AWS instance and can support at least 200 simultaneous UAF operations in that configuration.
 
 Lightfactor Identity Engine was designed and built with an emphasis on scalability and simplicity with regard to installation, dependencies, architecture, etc. It is offered here, in Open Source form, to educate, drive further adoption of FIDO, and expand the FIDO ecosystem. No warranty is offered or implied.
 
@@ -13,8 +13,6 @@ Check us out at https://lightfactor.co.
 ## Features
 
 Per the FIDO specifications, it offers the following UAF features: registration, authentication (including transaction confirmation), deregistration.
-
-Additional features are planned; stay tuned for announcements and information...
 
 ## Requirements
 
