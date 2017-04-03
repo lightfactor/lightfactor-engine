@@ -24,6 +24,7 @@
 var uaf = require('lightfactor-uaf');
 var express = require('express');
 var router = express.Router();
+var config  = require('../config');
 
 var dm = null;
 var appID = config.appID
