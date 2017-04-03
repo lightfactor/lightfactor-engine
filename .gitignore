@@ -60,6 +60,7 @@ typings/
 data
 scripts
 test
+config.js
 README.ec2
 
 *.crt
