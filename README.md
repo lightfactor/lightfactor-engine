@@ -26,10 +26,11 @@ Per the FIDO specifications, it offers the following UAF features: registration,
 
 1. Install node and python on your platform
 2. **git clone** this repo into a local directory
-3. **npm install** to install modules (including lightfactor-uaf)
-4. Edit **config.js** to reflect your MongoDB endpoint and database (and SSL paths, if changed)
-5. **node seed** to seed configured database with minimal facet, policy, metadata, and challenge data (and indexes)
-6. **node app** to run server
+3. **sudo apt-get install build-essential ursa pkg-config libcairo2-dev libjpeg-dev libgif-dev** to install all the canvas module dependencies
+4. **npm install** to install modules (including lightfactor-uaf)
+5. Edit **config.js** to reflect your MongoDB endpoint and database (and SSL paths, if changed)
+6. **node seed** to seed configured database with minimal facet, policy, metadata, and challenge data (and indexes)
+7. **node app** to run server
 
 This process assumes that you know how to install and use node. Note that, depending on your platform, there may be additional libraries required, particularly with regard to transaction confirmation image generation. Also note that you may want or need to edit the seeded data to conform with your particular requirements; if you'd like to edit it before insertion, it is located in the new *db* subdirectory.
 
