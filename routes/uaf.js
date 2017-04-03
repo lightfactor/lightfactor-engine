@@ -26,13 +26,12 @@ var express = require('express');
 var router = express.Router();
 
 var dm = null;
-var appID = null;
+var appID = config.appID
 
 // TODO: wire up actual status codes per FIDO spec (uaf.statusCode has objects)
 
 router.use(function(req, res, next) {
   if (!dm) dm = req.app.get('dataMongo');
-  appID = `${req.protocol}://${req.hostname}/`;
   next();
 });
 

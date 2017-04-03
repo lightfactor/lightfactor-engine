@@ -36,6 +36,8 @@ var config = {
         //  connectionUrl: 'mongodb://user:password@host:port/database'
         connectionUrl: 'mongodb://localhost:27017/local'
     },
+    appID: 'https://localhost:8000/',
+    trustedFacets: []
     port: 8000
 }
 
