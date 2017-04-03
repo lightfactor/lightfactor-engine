@@ -1,4 +1,3 @@
-
 /*
 
     Copyright © 2016, Lightfactor, LLC.
@@ -23,20 +22,21 @@
 
 var fs = require('fs');
 
-var config = {};
-
-config.https = {
-	key: fs.readFileSync(__dirname + '/crypto/server-key.pem'),
-	cert: fs.readFileSync(__dirname + '/crypto/server-crt.pem'),
-	honorCipherOrder: true,
-	NPNProtocols: ['http/1.1', 'http/1.0'],
-	secureProtocol: 'TLSv1_2_method',
-	rejectUnauthorized: false
-};
-
-config.mongodb = {
-//  connectionUrl: 'mongodb://user:password@host:port/database'
-  connectionUrl: 'mongodb://localhost:27017/local'
-};
+var config = {
+    https: {
+        key: fs.readFileSync('<path to private key PEM file>'),
+        cert: fs.readFileSync('<path to private cert PEM file>'),
+        honorCipherOrder: true,
+        NPNProtocols: ['http/1.1', 'http/1.0'],
+        secureProtocol: 'TLSv1_2_method',
+        /* Set to false if running with self-signed cerificates */
+        rejectUnauthorized: true
+    },
+    mongodb: {
+        // connectionUrl: 'mongodb://localhost:27017/local'
+        connectionUrl: 'mongodb://user:password@host:port/database'
+    },
+    port: 8000
+}
 
 module.exports = config;
