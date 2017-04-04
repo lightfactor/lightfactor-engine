@@ -41,7 +41,6 @@ var start = function(options, callback) {
     console.log("Connected to server.");
     db = result;
     started = true;
-    facets = getCollection("facets");
     policies = getCollection("policies");
     challenges = getCollection("challenges");
     metadatas = getCollection("metadatas");
