@@ -134,8 +134,7 @@ router.post('/Reg', function(req, res, next) {                                  
   var response = responses[0];                                                              // TODO: deal with array properly
 
   Promise.resolve({})
-    .then(data => dm.findOneTrustedFacetList({ appID: appID }, data))
-    .then(data => uaf.validateAndUnwrapResponse([ "Reg" ], appID, data.trustedFacets.ids, response))
+    .then(data => uaf.validateAndUnwrapResponse([ "Reg" ], appID, config.trustedFacets, response))
     .then(data => dm.findAndDeleteChallenge({ challenge: data.fcParams.challenge }, data))
     .then(data => dm.findExactlyOneMetadata({ aaid: data.assertionObject.assertion.TAG_UAFV1_REG_ASSERTION.TAG_UAFV1_KRD.TAG_AAID.s, "upv.major": 1, "upv.minor": 0 }, data))
     .then(data => uaf.verifyRegistrationAssertion(data.assertionObject, data.metadata, data))    // add assertion as a parameter
@@ -154,8 +153,7 @@ router.post('/Auth', function(req, res, next) {                                 
   var response = responses[0];
 
   Promise.resolve({})
-    .then(data => dm.findOneTrustedFacetList({ appID: appID }, data))
-    .then(data => uaf.validateAndUnwrapResponse([ "Auth" ], appID, data.trustedFacets.ids, response))
+    .then(data => uaf.validateAndUnwrapResponse([ "Auth" ], appID, config.trustedFacets, response))
     .then(data => dm.findAndDeleteChallenge({ challenge: data.fcParams.challenge }, data))
     .then(data => dm.findExactlyOneMetadata({ aaid: data.assertionObject.assertion.TAG_UAFV1_AUTH_ASSERTION.TAG_UAFV1_SIGNED_DATA.TAG_AAID.s, "upv.major": 1, "upv.minor": 0 }, data))
     .then(data => dm.findAuthenticators({ "data.keyID": data.assertionObject.assertion.TAG_UAFV1_AUTH_ASSERTION.TAG_UAFV1_SIGNED_DATA.TAG_KEYID.s, type: "uaf" }, {}, data))

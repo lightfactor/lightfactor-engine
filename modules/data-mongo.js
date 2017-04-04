@@ -61,23 +61,6 @@ var stop = function() {
 
 }
 
-function findOneTrustedFacetList(query, obj) {
-  var promise = new Promise(function(resolve, reject) {
-    console.log("Searching for trusted facet list (TFL).");
-    facets.find(query).toArray(function(err, facetList) {
-      if (err) reject(err);
-      if (!(facetList) || facetList.length !== 1) reject(new Error("TFL search did not yield exactly one match."));
-      else {
-        obj.trustedFacets = {
-          trustedFacets: facetList[0].trustedFacets
-        };
-        resolve (obj);
-      }
-    });
-  });
-  return promise;
-}
-
 function findOnePolicy(query, obj) {
   var promise = new Promise(function(resolve, reject) {
     console.log("Searching for policy.");
@@ -197,7 +180,6 @@ module.exports = {
   start: start,
   stop: stop,
 
-  findOneTrustedFacetList: findOneTrustedFacetList,
   findOnePolicy: findOnePolicy,
 
   findAndDeleteChallenge: findAndDeleteChallenge,
