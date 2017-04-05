@@ -77,15 +77,17 @@ var start = function(options, callback) {
     });
 
     readFiles(path.join(__dirname, '../metadata'), function(filename, content) {
-        console.log(`Loading metadata statement from file ${filename}`);
+        if(filename.endsWith('.json')) {
+            console.log(`Loading metadata statement from file ${filename}`);
+            let mds  = JSON.parse(content);
+            let aaid = mds.aaid;
 
-        let mds  = JSON.parse(content);
-        let aaid = mds.aaid;
+            if(!metadatas[aaid])
+                metadatas[aaid] = [];
 
-        if(!metadatas[aaid])
-            metadatas[aaid] = [];
-
-        metadatas[aaid].push(mds);
+            metadatas[aaid].push(mds);
+        } else
+            console.log(`Ignoring ${filename}. JSON file must end with ".json"!`)
 
     }, function(error) {
         throw error;
