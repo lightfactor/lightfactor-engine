@@ -21,7 +21,7 @@
 
 */
 
-var MongoDB = require('mongodb');
+var MongoDB    = require('mongodb');
 var MongoClient = MongoDB.MongoClient;
 
 var config = require("./config");
@@ -35,7 +35,7 @@ MongoClient.connect(config.mongodb.connectionUrl, function(err, result) {
 
   db = result;
 
-  for (collectionName of ["policies", "metadatas", "challenges"]) {
+  for (collectionName of ["policies", "challenges"]) {
     promiseArray.push(doCollection(collectionName));
   }
 
@@ -45,8 +45,7 @@ MongoClient.connect(config.mongodb.connectionUrl, function(err, result) {
     })
     .catch(function(e) {
       console.log(`Server not seeded: ${e}`);
-    })
-  ;
+    });
 
   db.close();
 
