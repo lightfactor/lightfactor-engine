@@ -23,11 +23,11 @@
 
 var https = require('https');
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
+var express      = require('express');
+var path         = require('path');
+var favicon      = require('serve-favicon');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var bodyParser   = require('body-parser');
 
 var dataMongo = require('./modules/data-mongo');
 
@@ -62,16 +62,16 @@ app.use(function(req, res, next) {
 /// error handlers
 
 app.use(function(err, req, res, next) {
-  console.log(err);
-  var returnMessage = {
-    statusCode: 1498,
-    message: err.message
-  };
-  if (err.details) {
-    returnMessage.field = err.details[0].dataPath;
-    returnMessage.info = err.details[0].message;
-  }
-  res.json(returnMessage);
+    console.log(err);
+    var returnMessage = {
+        statusCode: 1498,
+        message: err.message
+    };
+    if (err.details) {
+        returnMessage.field = err.details[0].dataPath;
+        returnMessage.info = err.details[0].message;
+    }
+    res.json(returnMessage);
 });
 
 // development error handler
@@ -97,17 +97,16 @@ app.use(function(err, req, res, next) {
 });
 
 function initialize(callback) {
-
-  dataMongo.start(config.mongodb, function(err) {
-    app.set('dataMongo', dataMongo);
-    callback();
-  });
-
+    dataMongo.start(config.mongodb, function(err) {
+        app.set('dataMongo', dataMongo);
+        callback();
+    });
 }
 
 initialize(function() {
-  var hs = require('https').Server(config.https, app);
-  hs.listen(8000);
+    console.log(`Starting server on port ${config.port}`);
+    var hs = require('https').Server(config.https, app);
+    hs.listen(config.port);
 });
 
 module.exports = app;

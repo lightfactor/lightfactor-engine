@@ -1,112 +1,139 @@
 
 /*
 
-    Copyright © 2016, Lightfactor, LLC.
-    Created by Dave Atherton.
+        Copyright © 2016, Lightfactor, LLC.
+        Created by Dave Atherton.
 
-    This file is part of lightfactor-engine.
+        This file is part of lightfactor-engine.
 
-    lightfactor-uaf is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+        lightfactor-uaf is free software: you can redistribute it and/or modify
+        it under the terms of the GNU Affero General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
 
-    lightfactor-uaf is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
+        lightfactor-uaf is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU Affero General Public License for more details.
 
-    You should have received a copy of the GNU Affero General Public License
-    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+        You should have received a copy of the GNU Affero General Public License
+        along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-var MongoDB = require('mongodb');
+var MongoDB     = require('mongodb');
 var MongoClient = MongoDB.MongoClient;
+
+var fs   = require('fs');
+var path = require('path');
 
 var started = false;
 var db = null;
 
 var policies;
 var challenges;
-var metadatas;
 var authenticators;
+var metadatas = {};
 
+
+/**
+ * Reads all files in the forlder
+ * @param  {String} dirname          - folder location
+ * @param  {Function} onFileContent  - on every file read callback
+ * @param  {Function} onError        - error callback
+ */
+var readFiles = function(dirname, onFileContent, onError) {
+    fs.readdir(dirname, function(err, filenames) {
+        if (err) {
+            onError(err);
+            return;
+        }
+        filenames.forEach(function(filename) {
+            fs.readFile(path.join(dirname, filename), 'utf-8', function(err, content) {
+                if (err) {
+                    onError(err);
+                    return;
+                }
+                onFileContent(filename, content);
+            });
+        });
+    });
+
+}
 
 var start = function(options, callback) {
 
-  if (started) callback();
+    if (started) callback();
 
-  MongoClient.connect(options.connectionUrl, function(err, result) {
-    console.log("Connected to server.");
-    db = result;
-    started = true;
-    facets = getCollection("facets");
-    policies = getCollection("policies");
-    challenges = getCollection("challenges");
-    metadatas = getCollection("metadatas");
-    authenticators = getCollection("authenticators");
-    callback(err);
-  });
+
+    MongoClient.connect(options.connectionUrl, function(error, result) {
+        console.log("Connected to server.");
+        db      = result;
+        started = true;
+        policies       = getCollection("policies");
+        challenges     = getCollection("challenges");
+        authenticators = getCollection("authenticators");
+        callback(error);
+    });
+
+    readFiles(path.join(__dirname, '../metadata'), function(filename, content) {
+        if(filename.endsWith('.json')) {
+            console.log(`Loading metadata statement from file ${filename}`);
+            let mds  = JSON.parse(content);
+            let aaid = mds.aaid;
+
+            if(!metadatas[aaid])
+                metadatas[aaid] = [];
+
+            metadatas[aaid].push(mds);
+        } else
+            console.log(`Ignoring ${filename}. JSON file must end with ".json"!`)
+
+    }, function(error) {
+        throw error;
+    });
 
 }
 
 var stop = function() {
 
-  if (started) {
-    db.close();
-    console.log("Disconnected from server.");
-    started = false;
-  }
+    if (started) {
+        db.close();
+        console.log("Disconnected from server.");
+        started = false;
+    }
 
-}
-
-function findOneTrustedFacetList(query, obj) {
-  var promise = new Promise(function(resolve, reject) {
-    console.log("Searching for trusted facet list (TFL).");
-    facets.find(query).toArray(function(err, facetList) {
-      if (err) reject(err);
-      if (!(facetList) || facetList.length !== 1) reject(new Error("TFL search did not yield exactly one match."));
-      else {
-        obj.trustedFacets = {
-          trustedFacets: facetList[0].trustedFacets
-        };
-        resolve (obj);
-      }
-    });
-  });
-  return promise;
 }
 
 function findOnePolicy(query, obj) {
-  var promise = new Promise(function(resolve, reject) {
-    console.log("Searching for policy.");
-    policies.find(query).toArray(function(err, policy) {
-      if (err) reject(err);
-      if (!(policy) || policy.length !== 1) reject(new Error("Policy search did not yield exactly one match."));
-      else {
-        obj.policy = policy[0].policy;
-        resolve (obj);
-      }
+    var promise = new Promise(function(resolve, reject) {
+        console.log("Searching for policy.");
+        policies.find(query).toArray(function(err, policy) {
+            if (err) reject(err);
+            if (!(policy) || policy.length !== 1) reject(new Error("Policy search did not yield exactly one match."));
+            else {
+                obj.policy = policy[0].policy;
+                resolve (obj);
+            }
+        });
     });
-  });
-  return promise;
+    return promise;
 }
 
 function findAndDeleteChallenge(query, obj) {
-  var promise = new Promise(function(resolve, reject) {
-    console.log("Searching for challenge.");
-    challenges.findOneAndDelete(query, function(err, challenge) {
-      if (err) reject(err);
-      if (!(challenge) || !(challenge.value)) reject(new Error("No matching challenge found."));      // TODO: are both of these conditions possible, i.e., a challenge without a value?
-      else {
-        obj.username = challenge.value.username;
-        obj.challenge = challenge.value;
-        resolve (obj);
-      }
+    var promise = new Promise(function(resolve, reject) {
+        console.log("Searching for challenge.");
+        challenges.findOneAndDelete(query, function(err, challenge) {
+            if (err) reject(err);
+            if (!(challenge) || !(challenge.value)) reject(new Error("No matching challenge found."));      // TODO: are both of these conditions possible, i.e., a challenge without a value?
+            else {
+                obj.username = challenge.value.username;
+                obj.challenge = challenge.value;
+                resolve (obj);
+            }
+        });
     });
-  });
-  return promise;
+    return promise;
 }
 
 // NOTE: the syntax for update() below sets a createdAt column so we can take advantage of MongoDB TTL feature
@@ -115,116 +142,130 @@ function findAndDeleteChallenge(query, obj) {
 //        the $currentDate update operator is only available then; we want system time to avoid issues with bad local time
 
 function saveChallenge(challenge, obj) {
-  var promise = new Promise(function(resolve, reject) {
-    console.log("Saving challenge.");
-    challenges.update({ challenge: challenge.challenge }, { $currentDate: { createdAt: true }, $set: challenge } , { upsert: true }, function(err, result) {
-      if (err) reject(err);
-      resolve(obj);
+    var promise = new Promise(function(resolve, reject) {
+        console.log("Saving challenge.");
+        challenges.update({ challenge: challenge.challenge }, { $currentDate: { createdAt: true }, $set: challenge } , { upsert: true }, function(err, result) {
+            if (err) reject(err);
+            resolve(obj);
+        });
     });
-  });
-  return promise;
+    return promise;
 }
 
 function findExactlyOneMetadata(query, obj) {
-  var promise = new Promise(function(resolve, reject) {
-    console.log("Searching for metadata.");
-    console.log(query);
-    metadatas.find(query).toArray(function(err, metadata) {
-      if (err) reject(err);
-      if (!(metadata) || metadata.length !== 1) reject(new Error("Metadata search did not yield exactly one match."));
-      else {
-        obj.metadata = metadata[0];
-        resolve (obj);
-      }
+    var promise = new Promise(function(resolve, reject) {
+        console.log("Searching for metadata.");
+        console.log(query);
+        if(metadatas[query.aaid]) {
+            let statement;
+
+            for(let metadata of metadatas[query.aaid]) {
+                if(statement)
+                    break
+
+                for(let upv of metadata.upv) {
+                    if(upv.major === query['upv.major'] && upv.minor === query['upv.minor']) {
+                        statement = metadata;
+                        break
+                    }
+                }
+            }
+
+            if(statement) {
+                obj.metadata = statement;
+                resolve(obj);
+            } else
+                reject(`No metadata statement with version v${query['upv.major']}.${query['upv.minor']} found!`);
+
+        } else
+            reject(`No metadata statement for ${query.aaid} found!`)
+
     });
-  });
-  return promise;
+    return promise;
 }
 
 // NOTES:
 //  use a query of { $a: "" } to trigger an error
 //  devices.find({ _id: dm.toObjectId("57a8a0e0b95d8a2648bdb5ef") }).limit(1).next()
 function findAuthenticators(query, modifier, obj) {
-  var promise = new Promise(function(resolve, reject) {
-    console.log("Searching for authenticators.");
-    console.log(query);
-    authenticators.find(query, modifier).toArray(function(err, authenticatorArray) {
-      if (err) reject(err);
+    var promise = new Promise(function(resolve, reject) {
+        console.log("Searching for authenticators.");
+        console.log(query);
+        authenticators.find(query, modifier).toArray(function(err, authenticatorArray) {
+            if (err) reject(err);
 //      if (devices.length === 0) reject(new Error("No matching authenticators found."));
-      obj.authenticators = authenticatorArray;
-      resolve(obj);
+            obj.authenticators = authenticatorArray;
+            resolve(obj);
+        });
     });
-  });
-  return promise;
+    return promise;
 }
 
 function updateAuthenticator(query, update, obj) {
-  var promise = new Promise(function(resolve, reject) {
-    console.log("Updating authenticator.");
-    authenticators.update(query, update, function(err, result) {
-      if (err) reject(err);
-      resolve(obj);
+    var promise = new Promise(function(resolve, reject) {
+        console.log("Updating authenticator.");
+        authenticators.update(query, update, function(err, result) {
+            if (err) reject(err);
+            resolve(obj);
+        });
     });
-  });
-  return promise;
+    return promise;
 }
 
 function saveAuthenticator(authenticator, obj) {
-  var promise = new Promise(function(resolve, reject) {
-    console.log("Creating registration.");
-    authenticators.insertOne(authenticator, { j: true }, function(err, result) {
-      if (err) reject(err);
-      resolve(obj);
+    var promise = new Promise(function(resolve, reject) {
+        console.log("Creating registration.");
+        authenticators.insertOne(authenticator, { j: true }, function(err, result) {
+            if (err) reject(err);
+            resolve(obj);
+        });
     });
-  });
-  return promise;
+    return promise;
 }
 
 function deleteAuthenticators(query, obj) {
-  var promise = new Promise(function(resolve, reject) {
-    console.log("Deleting authenticators.");
-    authenticators.deleteMany(query, function(err, result) {
-      if (err) reject(err);
-      resolve(obj);
+    var promise = new Promise(function(resolve, reject) {
+        console.log("Deleting authenticators.");
+        authenticators.deleteMany(query, function(err, result) {
+            if (err) reject(err);
+            resolve(obj);
+        });
     });
-  });
-  return promise;
+    return promise;
 }
 
 
 module.exports = {
 
-  start: start,
-  stop: stop,
+    start: start,
+    stop: stop,
 
-  findOneTrustedFacetList: findOneTrustedFacetList,
-  findOnePolicy: findOnePolicy,
+    findOnePolicy: findOnePolicy,
 
-  findAndDeleteChallenge: findAndDeleteChallenge,
-  saveChallenge: saveChallenge,
+    findAndDeleteChallenge: findAndDeleteChallenge,
+    saveChallenge: saveChallenge,
 
-  findExactlyOneMetadata: findExactlyOneMetadata,
+    findExactlyOneMetadata: findExactlyOneMetadata,
 
-  findAuthenticators: findAuthenticators,
-  updateAuthenticator: updateAuthenticator,
-  saveAuthenticator: saveAuthenticator,
-  deleteAuthenticators: deleteAuthenticators
+    findAuthenticators: findAuthenticators,
+    updateAuthenticator: updateAuthenticator,
+    saveAuthenticator: saveAuthenticator,
+    deleteAuthenticators: deleteAuthenticators
 
 }
 
 var toObjectId = function(oid) {                                                            // a 24 byte hex string, 12 byte binary string, or a Number
 
-  return MongoDB.ObjectId(oid);
+    return MongoDB.ObjectId(oid);
 
 }
 
 var getCollection = function(collectionString) {
 
-  var   collection = db.collection(collectionString);
+    var collection = db.collection(collectionString);
 
-  if (collection != null) {
-    console.log("Collection found (" + collectionString + ").");
-    return collection;
-  }
-                                                                                            // TODO: else?
+    if (collection != null) {
+        console.log("Collection found (" + collectionString + ").");
+        return collection;
+    }                                                                                                                                                                                        // TODO: else?
 }
