@@ -24,24 +24,24 @@
 var MongoDB    = require('mongodb');
 var MongoClient = MongoDB.MongoClient;
 
-var config = require("./config");
+var config = require('./config');
 
 var db = {};
 var promiseArray = [];
 
 MongoClient.connect(config.mongodb.connectionUrl, function(err, result) {
 
-  console.log("Connected to server.");
+  console.log('Connected to server.');
 
   db = result;
 
-  for (collectionName of ["challenges"]) {
+  for (collectionName of ['challenges']) {
     promiseArray.push(doCollection(collectionName));
   }
 
   Promise.all(promiseArray)
     .then(values => {
-      console.log("Server seeded.");
+      console.log('Server seeded.');
     })
     .catch(function(e) {
       console.log(`Server not seeded: ${e}`);
