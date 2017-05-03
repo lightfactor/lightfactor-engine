@@ -35,7 +35,7 @@ MongoClient.connect(config.mongodb.connectionUrl, function(err, result) {
 
   db = result;
 
-  for (collectionName of ["policies", "challenges"]) {
+  for (collectionName of ["challenges"]) {
     promiseArray.push(doCollection(collectionName));
   }
 

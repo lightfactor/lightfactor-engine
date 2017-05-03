@@ -34,7 +34,7 @@ var dataMongo = require('./modules/data-mongo');
 var uaf = require('./routes/uaf');
 var trustedFacets = require('./routes/trustedFacets');
 
-var config = require("./config");
+var config = require('./config');
 
 var app = express();
 

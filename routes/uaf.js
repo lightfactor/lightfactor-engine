@@ -67,7 +67,7 @@ router.post('/', function(req, res, next) {                                     
         case "Reg":
         {                                                                       // TODO: parameterize policy
             console.log("Registration request requested.");
-            dm.findOnePolicy({ name: "policy0" }, data)
+            dm.setPolicy(data)
                 .then(data => dm.findAuthenticators({ username: username, type: "uaf" }, { "data.keyID": 1, "data.aaid": 1 }, data))
                 .then(data => uaf.getRegistrationRequest(appID, data.policy, data.authenticators, username, data))
                 .then(data => extractChallengeFromRequest(data.uafRequest[0]))
@@ -82,7 +82,7 @@ router.post('/', function(req, res, next) {                                     
         {
             console.log("Authentication request requested.");
 
-            var p = dm.findOnePolicy({ name: "policy0" }, data);
+            var p = dm.setPolicy(data);
 
             if (username != null) {
                 console.log("Authenticating with username.")

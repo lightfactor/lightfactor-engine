@@ -37,6 +37,7 @@ var config = {
         connectionUrl: 'mongodb://user:password@host:port/database'
     },
     appID: '<url of an appID>',
+    disallowed: [/* policy.disallowed */],
     trustedFacets: [/* list of trusted facets */],
     port: 8000
 }
