@@ -37,6 +37,7 @@ var config = {
         connectionUrl: 'mongodb://localhost:27017/local'
     },
     appID: 'https://localhost:8000',
+    disallowed: ['FFFF#FFFF'],
     trustedFacets: [],
     port: 8000
 }
