@@ -23,7 +23,7 @@
 
 var MongoDB     = require('mongodb');
 var MongoClient = MongoDB.MongoClient;
-var config      = require(__dirname + './config');
+var config      = require(__dirname + '/config');
 
 var fs   = require('fs');
 var path = require('path');
