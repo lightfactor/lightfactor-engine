@@ -21,12 +21,12 @@
 
 */
 
-var MongoDB     = require('mongodb');
-var MongoClient = MongoDB.MongoClient;
-var config      = require(__dirname + '/config');
-
 var fs   = require('fs');
 var path = require('path');
+
+var MongoDB     = require('mongodb');
+var MongoClient = MongoDB.MongoClient;
+var config      = require(path.join(__dirname, '../config'));
 
 var started = false;
 var db = null;
@@ -112,9 +112,9 @@ function setPolicy(obj) {
          * @type {Array}
          */
         let accepted = [];
-        for(let metadata of metadatas) {
+        for(let aaid of Object.keys(metadatas)) {
             accepted.push([
-                { "aaid" : [ metadata.aaid ]}
+                { "aaid" : [aaid]}
             ])
         }
 
@@ -123,6 +123,8 @@ function setPolicy(obj) {
             'accepted': accepted,
             'disallowed': config.disallowed
         }
+
+        resolve(obj)
     });
     return promise;
 }
