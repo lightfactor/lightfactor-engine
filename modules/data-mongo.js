@@ -21,16 +21,16 @@
 
 */
 
-var MongoDB     = require('mongodb');
-var MongoClient = MongoDB.MongoClient;
-
 var fs   = require('fs');
 var path = require('path');
+
+var MongoDB     = require('mongodb');
+var MongoClient = MongoDB.MongoClient;
+var config      = require(path.join(__dirname, '../config'));
 
 var started = false;
 var db = null;
 
-var policies;
 var challenges;
 var authenticators;
 var metadatas = {};
@@ -105,17 +105,26 @@ var stop = function() {
 
 }
 
-function findOnePolicy(query, obj) {
+function setPolicy(obj) {
     var promise = new Promise(function(resolve, reject) {
-        console.log("Searching for policy.");
-        policies.find(query).toArray(function(err, policy) {
-            if (err) reject(err);
-            if (!(policy) || policy.length !== 1) reject(new Error("Policy search did not yield exactly one match."));
-            else {
-                obj.policy = policy[0].policy;
-                resolve (obj);
-            }
-        });
+        /**
+         * Load list of accepted AAID's from config
+         * @type {Array}
+         */
+        let accepted = [];
+        for(let aaid of Object.keys(metadatas)) {
+            accepted.push([
+                { "aaid" : [aaid]}
+            ])
+        }
+
+
+        obj.policy = {
+            'accepted': accepted,
+            'disallowed': config.disallowed
+        }
+
+        resolve(obj)
     });
     return promise;
 }
@@ -240,7 +249,7 @@ module.exports = {
     start: start,
     stop: stop,
 
-    findOnePolicy: findOnePolicy,
+    setPolicy: setPolicy,
 
     findAndDeleteChallenge: findAndDeleteChallenge,
     saveChallenge: saveChallenge,
