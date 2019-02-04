@@ -23,6 +23,7 @@
 var fs = require('fs');
 
 var config = {
+    // If you don't need HTTPS you can remove this entire section.
     https: {
         key: fs.readFileSync(__dirname + '/crypto/server-key.pem'),
         cert: fs.readFileSync(__dirname + '/crypto/server-crt.pem'),

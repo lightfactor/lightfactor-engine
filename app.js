@@ -105,8 +105,15 @@ function initialize(callback) {
 
 initialize(function() {
     console.log(`Starting server on port ${config.port}`);
-    var hs = require('https').Server(config.https, app);
-    hs.listen(config.port);
+
+    let serverListener = undefined;
+    if(config.https) {
+        serverListener = require('https').Server(config.https, app);
+    } else {
+        serverListener = app;
+    }
+    
+    serverListener.listen(config.port);
 });
 
 module.exports = app;

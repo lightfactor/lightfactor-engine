@@ -68,7 +68,7 @@ var start = function(options, callback) {
 
     MongoClient.connect(options.connectionUrl, function(error, result) {
         console.log("Connected to server.");
-        db      = result;
+        db      = result.db();
         started = true;
         policies       = getCollection("policies");
         challenges     = getCollection("challenges");
