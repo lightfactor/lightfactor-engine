@@ -33,7 +33,7 @@ MongoClient.connect(config.mongodb.connectionUrl, function(err, result) {
 
   console.log('Connected to server.');
 
-  db = result;
+  db = result.db();
 
   for (collectionName of ['challenges']) {
     promiseArray.push(doCollection(collectionName));
@@ -47,7 +47,7 @@ MongoClient.connect(config.mongodb.connectionUrl, function(err, result) {
       console.log(`Server not seeded: ${e}`);
     });
 
-  db.close();
+  result.close();
 
 });
 
