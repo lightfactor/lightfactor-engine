@@ -25,7 +25,7 @@
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
     "debug": "^3.2.6",
-    "elliptic": "^6.5.3",
+    "elliptic": "^6.5.4",
     "express": "^4.17.1",
     "lightfactor-uaf": "0.0.3",
     "mongodb": "^3.3.3",
