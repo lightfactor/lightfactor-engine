@@ -30,7 +30,7 @@
     "lightfactor-uaf": "0.0.3",
     "mongodb": "^3.3.3",
     "morgan": "^1.9.1",
-    "node-forge": "^0.10.0",
+    "node-forge": "^1.0.0",
     "node-jose": "^1.1.3",
     "node-tlv": "^1.5.11",
     "pug": "^2.0.4",
