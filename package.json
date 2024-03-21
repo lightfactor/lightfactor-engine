@@ -24,7 +24,7 @@
     "apn": "^2.2.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
-    "debug": "^3.2.6",
+    "debug": "^3.2.7",
     "elliptic": "^6.5.3",
     "express": "^4.17.3",
     "lightfactor-uaf": "0.0.3",
